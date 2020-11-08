@@ -34,6 +34,7 @@ const config: webpack.Configuration = {
     compress: true,
     port: 4000,
   },
+  devtool: process.env.NODE_ENV === "production" ? false : "inline-source-map",
   performance: {
     hints: process.env.NODE_ENV === "production" ? "warning" : false,
   },

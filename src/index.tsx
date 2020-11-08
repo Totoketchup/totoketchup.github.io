@@ -1,21 +1,15 @@
 import ReactDOM from "react-dom";
 import React, { StrictMode } from "react";
-import { ChakraProvider } from "@chakra-ui/core";
-import DarkModeSwitch from "./components/SwitchTheme";
-import Hero from "./components/Hero";
+import { ChakraProvider, extendTheme } from "@chakra-ui/core";
+import App from "./App";
 
-const App = () => (
-  <div>
-    <DarkModeSwitch />
-    <Hero>
-      <span>Welcome</span>
-    </Hero>
-  </div>
-);
+const customTheme = extendTheme({
+  useSystemColorMode: true,
+});
 
 ReactDOM.render(
   <StrictMode>
-    <ChakraProvider resetCSS={true}>
+    <ChakraProvider theme={customTheme}>
       <App />
     </ChakraProvider>
   </StrictMode>,
