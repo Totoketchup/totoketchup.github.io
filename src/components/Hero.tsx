@@ -3,7 +3,7 @@ import React, { FunctionComponent } from "react";
 import propTypes from "prop-types";
 
 const Hero: FunctionComponent = (props) => (
-  <Flex justifyContent="center" alignItems="center" height="100vh">
+  <Flex justifyContent="center" alignItems="center" flexGrow={1}>
     <Heading fontSize="50px">{props.children}</Heading>
   </Flex>
 );
