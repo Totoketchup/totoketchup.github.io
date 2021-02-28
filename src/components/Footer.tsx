@@ -16,7 +16,10 @@ const Footer: React.FC = ({ children }) => (
 );
 
 Footer.propTypes = {
-  children: propTypes.object,
+  children: propTypes.oneOfType([
+    propTypes.arrayOf(propTypes.node),
+    propTypes.node,
+  ]),
 };
 
 export default Footer;
