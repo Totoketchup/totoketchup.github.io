@@ -8,10 +8,10 @@ import NonoGrid from "./Grid";
 
 type NonoProps = {
   image: NonoImage;
-  cellSize?: number;
+  cellSize: number;
 };
 
-const Nono: React.FunctionComponent<NonoProps> = ({ image }) => {
+const Nono: React.FunctionComponent<NonoProps> = ({ image, cellSize }) => {
   const hints = image.toHints();
   const linesHints = hints.getLinesHints();
   const colsHints = hints.getColsHints();
@@ -30,8 +30,8 @@ const Nono: React.FunctionComponent<NonoProps> = ({ image }) => {
 
   const onGridChange = (grid: NonoImage) => {
     if (
-      NonoImage.fromColorArray(
-        grid.flatten().map((color) => (color.isEqual(Black) ? Black : Empty)),
+      new NonoImage(
+        grid.data.map((color) => (color.isEqual(Black) ? Black : Empty)),
         grid.nbLines,
         grid.nbCols
       ).isEqual(image)
@@ -42,8 +42,8 @@ const Nono: React.FunctionComponent<NonoProps> = ({ image }) => {
 
   return (
     <Grid
-      templateRows={`100px repeat(${image.getNbLines()}, 1fr)`}
-      templateColumns={`100px repeat(${image.getNbCols()}, 1fr)`}
+      templateRows={`${cellSize}px repeat(${image.getNbLines()}, 1fr)`}
+      templateColumns={`${cellSize}px repeat(${image.getNbCols()}, 1fr)`}
       gap="4px"
     >
       <GridItem colSpan={1} rowSpan={1} bg="tomato">
@@ -78,13 +78,14 @@ const Nono: React.FunctionComponent<NonoProps> = ({ image }) => {
         nbCols={image.getNbCols()}
         nbLines={image.getNbLines()}
         onGridChange={onGridChange}
+        cellSize={cellSize}
       />
     </Grid>
   );
 };
 
 Nono.defaultProps = {
-  image: new NonoImage([
+  image: NonoImage.fromImage2D([
     [Black, Black, Black],
     [Black, Black, Black],
     [Black, Empty, Black],

@@ -9,23 +9,18 @@ import NonoGrid from "../../core/nono/image";
 type GridProps = {
   nbCols: number;
   nbLines: number;
+  cellSize: number;
   onGridChange: (grid: NonoImage) => void;
 };
 
 const initialGrid = (nbLines: number, nbCols: number) =>
-  NonoGrid.fromColorArray(
-    Array(nbCols * nbLines)
-      .fill(1)
-      .map((x, y) => x + y)
-      .map(() => White),
-    nbLines,
-    nbCols
-  );
+  NonoGrid.full(nbLines, nbCols, White);
 
 const Grid: React.FunctionComponent<GridProps> = ({
   nbCols,
   nbLines,
   onGridChange,
+  cellSize,
 }) => {
   const [grid, setGrid] = useState(initialGrid(nbLines, nbCols));
 
@@ -34,16 +29,16 @@ const Grid: React.FunctionComponent<GridProps> = ({
     index: number
   ) => {
     event.preventDefault();
-    const cell = grid.getIndex(index);
+    const cell = grid.get(index);
+
     if (cell.isEqual(Black)) {
-      const newGrid = grid.setIndex(index, White);
-      setGrid(newGrid);
-      onGridChange(newGrid);
+      grid.set(index, White);
     } else {
-      const newGrid = grid.setIndex(index, Black);
-      setGrid(newGrid);
-      onGridChange(newGrid);
+      grid.set(index, Black);
     }
+    const newGrid = grid.clone();
+    setGrid(newGrid);
+    onGridChange(newGrid);
   };
 
   const onRightClick = (
@@ -51,17 +46,16 @@ const Grid: React.FunctionComponent<GridProps> = ({
     index: number
   ) => {
     event.preventDefault();
-    const cell = grid.getIndex(index);
+    const cell = grid.get(index);
 
     if (cell.isEqual(Cross)) {
-      const newGrid = grid.setIndex(index, White);
-      setGrid(newGrid);
-      onGridChange(newGrid);
+      grid.set(index, White);
     } else {
-      const newGrid = grid.setIndex(index, Cross);
-      setGrid(newGrid);
-      onGridChange(newGrid);
+      grid.set(index, Cross);
     }
+    const newGrid = grid.clone();
+    setGrid(newGrid);
+    onGridChange(newGrid);
   };
 
   return (
@@ -76,10 +70,10 @@ const Grid: React.FunctionComponent<GridProps> = ({
       padding="2px"
       borderRadius="10px"
     >
-      {grid.flatten().map((color, i) => (
+      {grid.data.map((color, i) => (
         <Cell
           key={i}
-          size={100}
+          size={cellSize}
           color={color}
           index={i}
           onClick={onClick}
@@ -94,6 +88,7 @@ Grid.propTypes = {
   nbCols: propTypes.number.isRequired,
   nbLines: propTypes.number.isRequired,
   onGridChange: propTypes.func.isRequired,
+  cellSize: propTypes.number.isRequired,
 };
 
 export default Grid;

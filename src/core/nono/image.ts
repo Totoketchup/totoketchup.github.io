@@ -1,56 +1,45 @@
-import { Image } from "@chakra-ui/core";
 import { Color } from "./colors";
 import { Hint, AlignedHints, GridHints } from "./hints";
 
-type Image = Color[][];
+type Image2D = Color[][];
+type Image1D = Color[];
 
 export default class NonoImage {
-  data: Image;
+  data: Image1D;
   nbLines: number;
   nbCols: number;
 
-  constructor(data: Image) {
+  constructor(data: Image1D, nbLines: number, nbCols: number) {
+    if (data.length != nbLines * nbCols) {
+      throw new Error(
+        "Data size doesn't correspond to the given nbCols/nbLines."
+      );
+    }
     this.data = data;
-    this.nbLines = data.length;
-
-    this.nonEmpty();
-
-    this.nbCols = data[0].length;
-
-    this.consistentSize();
+    this.nbCols = nbCols;
+    this.nbLines = nbLines;
   }
 
-  static fromColorArray(
-    colors: Color[],
-    nbLines: number,
-    nbCols: number
-  ): NonoImage {
-    const image: Color[][] = [];
-    for (let indexLine = 0; indexLine < nbLines; indexLine++) {
-      image.push([]);
-    }
+  static fromImage2D(data: Image2D): NonoImage {
+    const nbLines = data.length;
 
-    for (let indexLine = 0; indexLine < nbLines; indexLine++) {
-      for (let indexCol = 0; indexCol < nbCols; indexCol++) {
-        image[indexLine].push(colors[indexLine * nbCols + indexCol]);
-      }
-    }
-
-    return new NonoImage(image);
-  }
-
-  nonEmpty(): void {
-    if (this.nbLines == 0 || (this.nbLines == 1 && this.data[0].length == 0)) {
+    if (nbLines == 0 || (nbLines == 1 && data[0].length == 0)) {
       throw new Error("Image data should not be empty.");
     }
-  }
 
-  consistentSize(): void {
-    if (!this.data.every((line) => line.length == this.nbCols)) {
+    const nbCols = data[0].length;
+
+    if (!data.every((line) => line.length == nbCols)) {
       throw new Error(
         "The image is neither a Square nor a Rectangle: line sizes are not consistent."
       );
     }
+
+    return new NonoImage(flatten(data), nbLines, nbCols);
+  }
+
+  static full(nbLines: number, nbCols: number, color: Color): NonoImage {
+    return new NonoImage(Array(nbCols * nbLines).fill(color), nbLines, nbCols);
   }
 
   /**
@@ -67,86 +56,84 @@ export default class NonoImage {
     return this.nbLines;
   }
 
-  public getLine(index: number): Color[] {
+  public set(index: number, color: Color): void {
+    this.data[index] = color;
+  }
+
+  public get(index: number): Color {
     return this.data[index];
+  }
+
+  public get2D(indexLine: number, indexCol: number): Color {
+    return this.data[this.getNbCols() * indexLine + indexCol];
+  }
+
+  public set2D(indexLine: number, indexCol: number, color: Color): void {
+    this.data[this.getNbCols() * indexLine + indexCol] = color;
   }
 
   public isEqual(other: NonoImage): boolean {
     return (
-      this.flatten().every(
-        (element, index) => element == other.flatten()[index]
-      ) &&
+      this.data.every((element, index) => element == other.data[index]) &&
       other.nbCols == this.nbCols &&
       this.nbLines == other.nbLines
     );
   }
 
-  flatten(): Color[] {
-    return this.data.reduce(
-      (accumulator, value) => accumulator.concat(value),
-      [] as Color[]
-    );
-  }
-
   public transpose(): NonoImage {
-    const reversed: Color[][] = [];
-    for (let indexCol = 0; indexCol < this.nbCols; indexCol++) {
-      reversed.push([]);
-    }
+    const reversed: Image1D = [];
 
     for (let indexCol = 0; indexCol < this.nbCols; indexCol++) {
       for (let indexLine = 0; indexLine < this.nbLines; indexLine++) {
-        reversed[indexCol].push(this.data[indexLine][indexCol]);
+        reversed.push(this.get2D(indexLine, indexCol));
       }
     }
-    return new NonoImage(reversed);
+    return new NonoImage(reversed, this.nbCols, this.nbLines);
   }
 
   public toHints(): GridHints {
-    const lineHints = extractLineHints(this);
-    const colsHints = extractLineHints(this.transpose());
+    const lineHints = this.extractLineHints();
+    const colsHints = this.transpose().extractLineHints();
 
     return new GridHints(lineHints, colsHints);
   }
 
-  public setIndex(index: number, color: Color): NonoImage {
-    const newData = this.flatten().map((cell, i) =>
-      index == i ? color : cell
-    );
-    return NonoImage.fromColorArray(newData, this.nbLines, this.nbCols);
+  extractLineHints(): AlignedHints[] {
+    const hints: AlignedHints[] = [];
+
+    for (let indexLine = 0; indexLine < this.getNbLines(); indexLine++) {
+      const alignedHints: Hint[] = [];
+      let currentColor = this.get2D(indexLine, 0);
+      let nb = 1;
+
+      for (let indexCol = 1; indexCol < this.getNbCols(); indexCol++) {
+        const color: Color = this.get2D(indexLine, indexCol);
+        if (color.isEqual(currentColor)) {
+          nb++;
+        } else {
+          if (!currentColor.isEmpty()) {
+            alignedHints.push(new Hint(nb, currentColor));
+          }
+          nb = 1;
+          currentColor = color;
+        }
+      }
+      if (!currentColor.isEmpty()) {
+        alignedHints.push(new Hint(nb, currentColor));
+      }
+      hints.push(new AlignedHints(alignedHints));
+    }
+    return hints;
   }
 
-  public getIndex(index: number): Color {
-    return this.data[Math.floor(index / this.nbCols)][index % this.nbCols];
+  public clone(): NonoImage {
+    return new NonoImage(this.data, this.nbLines, this.nbCols);
   }
 }
 
-function extractLineHints(image: NonoImage): AlignedHints[] {
-  const hints: AlignedHints[] = [];
-
-  for (let indexLine = 0; indexLine < image.nbLines; indexLine++) {
-    const line = image.getLine(indexLine);
-
-    const alignedHints: Hint[] = [];
-    let currentColor = line[0];
-    let nb = 1;
-
-    for (let indexCol = 1; indexCol < line.length; indexCol++) {
-      const color: Color = line[indexCol];
-      if (color.isEqual(currentColor)) {
-        nb++;
-      } else {
-        if (!currentColor.isEmpty()) {
-          alignedHints.push(new Hint(nb, currentColor));
-        }
-        nb = 1;
-        currentColor = color;
-      }
-    }
-    if (!currentColor.isEmpty()) {
-      alignedHints.push(new Hint(nb, currentColor));
-    }
-    hints.push(new AlignedHints(alignedHints));
-  }
-  return hints;
+function flatten(image: Image2D): Image1D {
+  return image.reduce(
+    (accumulator, value) => accumulator.concat(value),
+    [] as Image1D
+  );
 }

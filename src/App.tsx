@@ -58,12 +58,11 @@ const App: FunctionComponent = () => (
     </Body>
     <Flex flexDirection="row" justifyContent="flex-start">
       <Nono
-        image={
-          new NonoImage([
-            [Black, Black, Black],
-            [Empty, Black, Black],
-          ])
-        }
+        image={NonoImage.fromImage2D([
+          [Black, Black, Black],
+          [Empty, Black, Black],
+        ])}
+        cellSize={100}
       />
     </Flex>
   </>
