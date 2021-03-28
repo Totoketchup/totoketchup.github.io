@@ -15,9 +15,8 @@ const App: FunctionComponent = () => (
         <MenuScoller>
           <a href="https://github.com/Totoketchup">GitHub</a>
           <a href="">NonoGram</a>
-          <a href="">Articles</a>
+          <a href="https://www.linkedin.com/in/anthony-d-amato/">LinkedIn</a>
           <a href="">Resume - CV</a>
-          <a href="">About me</a>
         </MenuScoller>
       </Hero>
       <Footer>
