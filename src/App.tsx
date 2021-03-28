@@ -6,19 +6,29 @@ import Heart from "./components/Heart";
 import Hero from "./components/Hero";
 import MenuScoller from "./components/MenuScroller";
 import { Text, Box } from "@chakra-ui/core";
+import { Switch, Route, Link } from "react-router-dom";
 
 const App: FunctionComponent = () => (
   <>
     <Body>
       <DarkModeSwitch />
-      <Hero>
-        <MenuScoller>
-          <a href="https://github.com/Totoketchup">GitHub</a>
-          <a href="">NonoGram</a>
-          <a href="https://www.linkedin.com/in/anthony-d-amato/">LinkedIn</a>
-          <a href="">Resume - CV</a>
-        </MenuScoller>
-      </Hero>
+
+      <Switch>
+        <Route path="/nono">In Construction</Route>
+        <Route path="">
+          <Hero>
+            <MenuScoller>
+              <a href="https://github.com/Totoketchup">GitHub</a>
+              <Link to="/nono">NonoGram</Link>
+              <a href="https://www.linkedin.com/in/anthony-d-amato/">
+                LinkedIn
+              </a>
+              <a href="">Resume - CV</a>
+            </MenuScoller>
+          </Hero>
+        </Route>
+      </Switch>
+
       <Footer>
         <Text fontSize={13}>Made with</Text>
         <Box mx={-2}>

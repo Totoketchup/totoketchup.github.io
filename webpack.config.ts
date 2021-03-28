@@ -28,11 +28,13 @@ const config: webpack.Configuration = {
   output: {
     path: path.resolve(__dirname, "build"),
     filename: "bundle.js",
+    publicPath: "/",
   },
   devServer: {
     contentBase: path.join(__dirname, "build"),
     compress: true,
     port: 4000,
+    historyApiFallback: true,
   },
   devtool: process.env.NODE_ENV === "production" ? false : "inline-source-map",
   performance: {
