@@ -5,8 +5,10 @@ import Footer from "./components/Footer";
 import Heart from "./components/Heart";
 import Hero from "./components/Hero";
 import MenuScoller from "./components/MenuScroller";
-import { Text, Box } from "@chakra-ui/core";
+import { Text, Box, Icon, IconButton, Center } from "@chakra-ui/core";
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { Switch, Route, Link } from "react-router-dom";
+import { AiOutlineHome } from "react-icons/ai";
 
 const App: FunctionComponent = () => (
   <>
@@ -27,6 +29,19 @@ const App: FunctionComponent = () => (
           </Route>
         </Switch>
       </Hero>
+      <Center>
+        <Link to="">
+          <IconButton
+            size="lg"
+            variant="outline"
+            colorScheme="white"
+            aria-label="Home"
+            fontSize="30px"
+            icon={<Icon as={AiOutlineHome} />}
+            isRound={true}
+          />
+        </Link>
+      </Center>
       <Footer>
         <Text fontSize={13}>Made with</Text>
         <Box mx={-2}>

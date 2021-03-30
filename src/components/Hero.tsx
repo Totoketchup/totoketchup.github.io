@@ -4,7 +4,7 @@ import propTypes from "prop-types";
 
 const Hero: FunctionComponent = (props) => (
   <Flex justifyContent="center" alignItems="center" flexGrow={1}>
-    <Heading fontSize="50px">{props.children}</Heading>
+    {props.children}
   </Flex>
 );
 
