@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom";
 import React, { StrictMode } from "react";
 import { ChakraProvider, extendTheme } from "@chakra-ui/core";
-import { BrowserRouter as Router } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";
 import App from "./App";
 
 const customTheme = extendTheme({

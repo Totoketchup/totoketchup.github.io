@@ -12,11 +12,10 @@ const App: FunctionComponent = () => (
   <>
     <Body>
       <DarkModeSwitch />
-
-      <Switch>
-        <Route path="/nono">In Construction</Route>
-        <Route path="">
-          <Hero>
+      <Hero>
+        <Switch>
+          <Route path="/nono">In Construction</Route>
+          <Route path="">
             <MenuScoller>
               <a href="https://github.com/Totoketchup">GitHub</a>
               <Link to="/nono">NonoGram</Link>
@@ -25,10 +24,9 @@ const App: FunctionComponent = () => (
               </a>
               <a href="">Resume - CV</a>
             </MenuScoller>
-          </Hero>
-        </Route>
-      </Switch>
-
+          </Route>
+        </Switch>
+      </Hero>
       <Footer>
         <Text fontSize={13}>Made with</Text>
         <Box mx={-2}>
