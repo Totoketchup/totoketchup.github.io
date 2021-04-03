@@ -19,7 +19,7 @@ const DimHint: React.FunctionComponent<DimHintProps> = ({
       <Box
         textColor={hint.getColor().toCSSRGB()}
         key={index}
-        style={{ margin: 5 }}
+        style={{ margin: 2 }}
       >
         {hint.getNumber()}
       </Box>

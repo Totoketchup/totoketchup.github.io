@@ -44,7 +44,7 @@ const Nono: React.FunctionComponent<NonoProps> = ({ image, cellSize }) => {
     <Grid
       templateRows={`${cellSize}px repeat(${image.getNbLines()}, 1fr)`}
       templateColumns={`${cellSize}px repeat(${image.getNbCols()}, 1fr)`}
-      gap="4px"
+      gap={`${cellSize / 25}px`}
     >
       <GridItem colSpan={1} rowSpan={1} bg="tomato">
         <Center>Timer</Center>

@@ -61,14 +61,14 @@ const Grid: React.FunctionComponent<GridProps> = ({
   return (
     <SimpleGrid
       columns={nbCols}
-      spacing="2px"
+      spacing={`${cellSize / 25}px`}
       bg="grey"
       style={{
         gridColumn: `span ${nbCols}`,
         gridRow: `span ${nbLines}`,
       }}
-      padding="2px"
-      borderRadius="10px"
+      padding={`${cellSize / 25}px`}
+      borderRadius={`${cellSize / 10}px`}
     >
       {grid.data.map((color, i) => (
         <Cell

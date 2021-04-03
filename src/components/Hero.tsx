@@ -1,4 +1,4 @@
-import { Flex, Heading } from "@chakra-ui/core";
+import { Flex } from "@chakra-ui/core";
 import React, { FunctionComponent } from "react";
 import propTypes from "prop-types";
 

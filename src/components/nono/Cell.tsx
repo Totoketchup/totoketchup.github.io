@@ -37,9 +37,9 @@ const Cell: React.FunctionComponent<CellProps> = ({
   return (
     <Box
       bg={color.toCSSRGB()}
-      height={size}
-      width={size}
-      borderRadius={10}
+      height={`${size}px`}
+      width={`${size}px`}
+      borderRadius={size / 10}
       onClick={onClickFun}
       onContextMenu={onRightClickFun}
     />
